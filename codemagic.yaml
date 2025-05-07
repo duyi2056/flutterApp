@@ -1,0 +1,28 @@
+workflows:
+  ios-release-workflow:
+    name: Build for real iPhone
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      vars:
+        BUNDLE_ID: "com.duyi2056.flutterApp"  # ⚠ 修改为你的真实包名（需在 Apple Developer 里注册）
+    scripts:
+      - name: Install dependencies
+        script: |
+          flutter pub get
+
+      - name: Build iOS release
+        script: |
+          flutter build ios --release --no-codesign
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+
+    code_signing:
+      automatic_code_signing:
+        apple_id: $APP_STORE_EMAIL
+        password: $APP_SPECIFIC_PASSWORD
+        team_id: $APP_STORE_TEAM_ID
+        bundle_identifier: $BUNDLE_ID
+        provisioning_profile_type: "automatic"
